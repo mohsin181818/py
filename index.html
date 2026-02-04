@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL TITAN QUANTUM-GATEWAY v20.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== GLOBAL RESET & ANTI-SELECTION ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            transition: background 0.5s;
+            cursor: default;
+        }
+        
+        img, a, button, input, textarea {
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+        
+        /* ===== THEME ENGINE ===== */
+        .theme-platinum {
+            --primary: #000000;
+            --secondary: #FFD700;
+            --accent: #C0C0C0;
+            --glass: rgba(0, 0, 0, 0.7);
+            --gradient: linear-gradient(135deg, #000000 0%, #2a2a2a 100%);
+        }
+        
+        .theme-gold {
+            --primary: #b8860b;
+            --secondary: #fff;
+            --accent: #ffd700;
+            --glass: rgba(184, 134, 11, 0.8);
+            --gradient: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+        }
+        
+        .theme-silver {
+            --primary: #c0c0c0;
+            --secondary: #333;
+            --accent: #e8e8e8;
+            --glass: rgba(192, 192, 192, 0.8);
+            --gradient: linear-gradient(135deg, #c0c0c0 0%, #f0f0f0 100%);
+        }
+        
+        .theme-normal {
+            --primary: #1a73e8;
+            --secondary: #34a853;
+            --accent: #4285f4;
+            --glass: rgba(26, 115, 232, 0.8);
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+        }
+        
+        /* ===== LUXURY 3D TYPOGRAPHY ===== */
+        .luxury-3d {
+            font-size: 4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-align: center;
+            color: #fff;
+            text-shadow: 
+                0 1px 0 #ccc,
+                0 2px 0 #c9c9c9,
+                0 3px 0 #bbb,
+                0 4px 0 #b9b9b9,
+                0 5px 0 #aaa,
+                0 6px 1px rgba(0,0,0,.1),
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+            animation: float 6s ease-in-out infinite;
+            padding: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-20px); }
+        }
+        
+        /* ===== GLASSMORPHISM CONTAINERS ===== */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 1rem auto;
+            max-width: 1200px;
+        }
+        
+        /* ===== ADMIN OVERLAY ===== */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-box {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .login-box h2 {
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        /* ===== ADMIN DASHBOARD ===== */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* ===== ANALYTICS CARDS ===== */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--gradient);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+            to { box-shadow: 0 5px 25px var(--secondary); }
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* ===== REVENUE GRAPH ===== */
+        .graph-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .graph-title {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        /* ===== DATA CONTROLLER ===== */
+        .data-controller {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .controller-input {
+            padding: 0.8rem;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        /* ===== 4-APP PAYMENT GRID ===== */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        
+        @media (min-width: 768px) {
+            .payment-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .payment-app {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+        
+        .payment-app:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .paytm { background: #00baf2; color: white; }
+        .phonepe { background: #5f259f; color: white; }
+        .gpay { background: #4285f4; color: white; }
+        .upi { background: linear-gradient(45deg, #00a550, #008744); color: white; }
+        
+        /* ===== UPI COPY ENGINE ===== */
+        .upi-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem auto;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .upi-id {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-family: monospace;
+        }
+        
+        .copy-btn {
+            padding: 1rem 2rem;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .copy-btn.copied {
+            background: #34a853;
+            cursor: not-allowed;
+        }
+        
+        /* ===== LIVE SUBMISSION TABLE ===== */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-table th {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fbbc04; color: #000; }
+        .status-verified { background: #34a853; color: white; }
+        .status-locked { background: #ea4335; color: white; }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            margin: 0.2rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .approve-btn { background: #34a853; color: white; }
+        .unlock-btn { background: #4285f4; color: white; }
+        .delete-btn { background: #ea4335; color: white; }
+        
+        /* ===== CHAT BOTS ===== */
+        .chatbot-icon {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        
+        .chat-window {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 15px;
+            border: 1px solid var(--secondary);
+            display: none;
+            z-index: 1001;
+        }
+        
+        .chat-header {
+            background: var(--primary);
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .message {
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .bot-message {
+            background: var(--glass);
+            margin-right: auto;
+        }
+        
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid var(--secondary);
+        }
+        
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #34a853;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            display: none;
+            z-index: 9999;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from { bottom: -100px; }
+            to { bottom: 2rem; }
+        }
+        
+        /* ===== HARD-LOCK SCREEN ===== */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+        }
+        
+        .lock-message {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 20px;
+            border: 2px solid #ea4335;
+        }
+        
+        /* ===== MOBILE OPTIMIZATION ===== */
+        @media (max-width: 768px) {
+            .luxury-3d {
+                font-size: 2.5rem;
+                padding: 1.5rem;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+            
+            .payment-grid {
+                gap: 1rem;
+            }
+            
+            .payment-app {
+                min-height: 150px;
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .app-icon {
+                font-size: 2.5rem;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 0.5rem;
+            }
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .d-flex { display: flex; }
+        .justify-center { justify-content: center; }
+        .align-center { align-items: center; }
+        .flex-column { flex-direction: column; }
+    </style>
+</head>
+<body>
+    <!-- ROOT PAGE (Path A) -->
+    <div id="rootPage" class="hidden">
+        <div class="luxury-3d">GLOBAL TITAN</div>
+    </div>
+    
+    <!-- ADMIN OVERLAY (Path B) -->
+    <div id="adminOverlay" class="admin-overlay hidden">
+        <div class="login-box">
+            <h2><i class="fas fa-shield-alt"></i> ADMIN VAULT ACCESS</h2>
+            <input type="password" id="adminPassword" class="login-input" placeholder="Enter Master Password">
+            <button id="loginBtn" class="nav-btn">UNLOCK VAULT</button>
+            <p id="loginError" style="color: #ea4335; margin-top: 1rem; display: none;">Invalid Password</p>
+        </div>
+    </div>
+    
+    <!-- ADMIN PANEL (After Login) -->
+    <div id="adminPanel" class="hidden">
+        <div class="admin-header">
+            <h1><i class="fas fa-crown"></i> QUANTUM GATEWAY ADMIN</h1>
+            <div class="admin-nav">
+                <button class="nav-btn" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+                <button class="nav-btn" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</button>
+                <button class="nav-btn" onclick="showSection('help')"><i class="fas fa-robot"></i> Help Bot</button>
+                <button class="nav-btn" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        
+        <div class="glass-card">
+            <!-- DASHBOARD SECTION -->
+            <div id="dashboardSection">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3 id="totalRevenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="verifiedCount">0</h3>
+                        <p>Verified Success</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="pendingCount">0</h3>
+                        <p>Pending Review</p>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <h3 class="graph-title">Daily Revenue Trend</h3>
+                    <svg id="revenueGraph" width="100%" height="300"></svg>
+                </div>
+                
+                <div class="table-container">
+                    <h3 class="graph-title">Live Transaction Log</h3>
+                    <table class="data-table" id="transactionTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>UTR</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dynamic rows inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- SETTINGS SECTION -->
+            <div id="settingsSection" class="hidden">
+                <h2 class="text-center mb-2"><i class="fas fa-sliders-h"></i> MASTER DATA CONTROLLER</h2>
+                
+                <div class="data-controller">
+                    <div>
+                        <label>App Name</label>
+                        <input type="text" id="appName" class="controller-input" placeholder="Enter App Name">
+                    </div>
+                    <div>
+                        <label>Product Name</label>
+                        <input type="text" id="productName" class="controller-input" placeholder="Enter Product Name">
+                    </div>
+                    <div>
+                        <label>User Name</label>
+                        <input type="text" id="userName" class="controller-input" placeholder="Enter User Name">
+                    </div>
+                    <div>
+                        <label>Recharge Amount</label>
+                        <input type="number" id="rechargeAmount" class="controller-input" placeholder="Enter Amount">
+                    </div>
+                    <div>
+                        <label>UPI ID</label>
+                        <input type="text" id="upiId" class="controller-input" placeholder="Enter UPI ID">
+                    </div>
+                </div>
+                
+                <button class="nav-btn" onclick="saveSettings()"><i class="fas fa-save"></i> Save All Settings</button>
+                
+                <div class="mt-2">
+                    <label>Theme Engine</label>
+                    <select id="themeSelect" class="controller-input" onchange="applyTheme(this.value)">
+                        <option value="platinum">Platinum (Black-Gold Glassmorphism)</option>
+                        <option value="gold">Gold (Royal)</option>
+                        <option value="silver">Silver</option>
+                        <option value="normal" selected>Normal (Fintech Blue)</option>
+                    </select>
+                </div>
+                
+                <!-- CHANGE PASSWORD SECTION -->
+                <div class="mt-2" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                    <h3><i class="fas fa-key"></i> Change Admin Password</h3>
+                    <div class="data-controller">
+                        <div>
+                            <label>Current Password</label>
+                            <input type="password" id="currentPassword" class="controller-input" placeholder="Enter current password">
+                        </div>
+                        <div>
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" class="controller-input" placeholder="Enter new password">
+                        </div>
+                        <div>
+                            <label>Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="controller-input" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    <button class="nav-btn" onclick="changePassword()"><i class="fas fa-sync-alt"></i> Update Password</button>
+                    <p id="passwordMessage" style="margin-top: 1rem;"></p>
+                </div>
+            </div>
+            
+            <!-- HELP BOT SECTION -->
+            <div id="helpSection" class="hidden">
+                <h2 class="text-center mb-2"><i class="fas fa-robot"></i> ADMIN HELP BOT</h2>
+                <div class="chat-window" id="adminChat" style="display: block; position: relative; bottom: auto; right: auto; width: 100%;">
+                    <div class="chat-messages" id="adminChatMessages">
+                        <div class="message bot-message">
+                            <strong>Help Bot:</strong> Welcome to Admin Help! How can I assist you today?
+                        </div>
+                    </div>
+                    <div style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <div class="d-flex">
+                            <input type="text" id="adminChatInput" class="controller-input" placeholder="Type your question..." style="flex: 1; margin-right: 0.5rem;">
+                            <button class="nav-btn" onclick="sendAdminMessage()">Send</button>
+                        </div>
+                        <div class="mt-2">
+                            <button class="nav-btn" onclick="quickQuestion('How do I change settings?')" style="margin: 0.2rem;">Settings Guide</button>
+                            <button class="nav-btn" onclick="quickQuestion('How to view transactions?')" style="margin: 0.2rem;">Transactions</button>
+                            <button class="nav-btn" onclick="quickQuestion('How to generate user links?')" style="margin: 0.2rem;">Link Generation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- USER PORTAL (Path C) -->
+    <div id="userPortal" class="hidden">
+        <!-- HARD-LOCK SCREEN -->
+        <div id="lockScreen" class="lock-screen">
+            <div class="lock-message">
+                <h2><i class="fas fa-lock"></i> ACCESS LOCKED</h2>
+                <p>This ID has been locked after UTR submission.</p>
+                <p>Please contact support for further assistance.</p>
+            </div>
+        </div>
+        
+        <div class="glass-card">
+            <div class="text-center mb-2">
+                <h1 id="displayAppName" style="font-size: 2rem; color: var(--secondary);">GLOBAL TITAN</h1>
+                <h2 id="displayProductName" style="font-size: 1.5rem; margin: 1rem 0;">Premium Service</h2>
+                <p>Welcome, <span id="displayUserName">User</span></p>
+                <p class="upi-id">Recharge Amount: <strong id="displayAmount">₹0</strong></p>
+            </div>
+            
+            <!-- UPI COPY SECTION -->
+            <div class="upi-container">
+                <p>Send Payment to this UPI ID:</p>
+                <div class="upi-id" id="displayUpiId">upi@globaltitan</div>
+                <button id="copyBtn" class="copy-btn" onclick="copyUpiId()">
+                    <i class="fas fa-copy"></i> COPY UPI ID
+                </button>
+            </div>
+            
+            <!-- PAYMENT GRID -->
+            <div id="paymentSection">
+                <h3 class="text-center mb-2">Choose Payment App</h3>
+                <div class="payment-grid">
+                    <div class="payment-app paytm" onclick="openPayment('paytm')">
+                        <div class="app-icon"><i class="fab fa-paytm"></i></div>
+                        <h4>Paytm</h4>
+                    </div>
+                    <div class="payment-app phonepe" onclick="openPayment('phonepe')">
+                        <div class="app-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h4>PhonePe</h4>
+                    </div>
+                    <div class="payment-app gpay" onclick="openPayment('gpay')">
+                        <div class="app-icon"><i class="fab fa-google"></i></div>
+                        <h4>Google Pay</h4>
+                    </div>
+                    <div class="payment-app upi" onclick="openPayment('upi')">
+                        <div class="app-icon"><i class="fas fa-qrcode"></i></div>
+                        <h4>Any UPI App</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UTR SUBMISSION -->
+            <div class="upi-container mt-2">
+                <h3 class="text-center mb-2">Submit Your 12-Digit UTR</h3>
+                <input type="text" id="utrInput" class="controller-input" placeholder="Enter 12-digit UTR" maxlength="12" style="width: 100%; text-align: center;">
+                <button id="submitUtrBtn" class="copy-btn mt-2" onclick="submitUTR()">
+                    <i class="fas fa-paper-plane"></i> SUBMIT UTR
+                </button>
+                <p id="utrError" style="color: #ea4335; margin-top: 1rem; display: none;">UTR must be exactly 12 digits</p>
+            </div>
+            
+            <!-- HOW IT WORKS BUTTON -->
+            <div class="text-center mt-2">
+                <button class="nav-btn" onclick="openHowItWorks()">
+                    <i class="fas fa-question-circle"></i> How It Works
+                </button>
+            </div>
+        </div>
+        
+        <!-- CUSTOMER SUPPORT BOT -->
+        <div class="chatbot-icon" onclick="toggleSupportChat()">
+            <i class="fas fa-headset"></i>
+        </div>
+        
+        <div class="chat-window" id="supportChat">
+            <div class="chat-header">
+                <h4><i class="fas fa-robot"></i> Support Assistant</h4>
+                <button onclick="toggleSupportChat()" style="background: none; border: none; color: white; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="supportMessages">
+                <div class="message bot-message">
+                    <strong>Support:</strong> Hello! How can I help you with your payment?
+                </div>
+            </div>
+            <div style="padding: 1rem;">
+                <div class="d-flex">
+                    <input type="text" id="supportInput" class="controller-input" placeholder="Ask a question..." style="flex: 1; margin-right: 0.5rem;">
+                    <button class="nav-btn" onclick="sendSupportMessage()">Send</button>
+                </div>
+                <div class="mt-2">
+                    <button class="nav-btn" onclick="quickSupport('How to pay?')" style="margin: 0.2rem; padding: 0.5rem;">How to Pay</button>
+                    <button class="nav-btn" onclick="quickSupport('Where to find UTR?')" style="margin: 0.2rem; padding: 0.5rem;">UTR Location</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- HOW IT WORKS MODAL -->
+    <div id="howItWorksModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="text-center mb-2"><i class="fas fa-info-circle"></i> How It Works</h2>
+            <div style="margin: 2rem 0;">
+                <div style="display: flex; align-items: center; margin: 1.5rem 0;">
+                    <div style="background: var(--secondary); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">1</div>
+                    <div>
+                        <h4>Choose Payment App</h4>
+                        <p>Select your preferred UPI payment application</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; margin: 1.5rem 0;">
+                    <div style="background: var(--secondary); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">2</div>
+                    <div>
+                        <h4>Copy UPI ID</h4>
+                        <p>Copy the provided UPI ID and paste in your payment app</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; margin: 1.5rem 0;">
+                    <div style="background: var(--secondary); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">3</div>
+                    <div>
+                        <h4>Make Payment</h4>
+                        <p>Complete the transaction in your payment app</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; margin: 1.5rem 0;">
+                    <div style="background: var(--secondary); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">4</div>
+                    <div>
+                        <h4>Submit UTR</h4>
+                        <p>Enter the 12-digit UTR from your payment receipt</p>
+                    </div>
+                </div>
+            </div>
+            <button class="nav-btn" onclick="closeModal()" style="width: 100%;">Got It</button>
+        </div>
+    </div>
+    
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">Copied Successfully!</div>
+    
+    <!-- AUTO-LINK GENERATION MODAL -->
+    <div id="linkGenModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="text-center mb-2"><i class="fas fa-link"></i> Generate User Link</h2>
+            <p>Click below to generate a unique user link:</p>
+            <button class="nav-btn" onclick="generateUserLink()" style="width: 100%; margin: 1rem 0;">
+                <i class="fas fa-bolt"></i> GENERATE & COPY LINK
+            </button>
+            <p id="generatedLink" style="word-break: break-all; background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px;"></p>
+            <button class="nav-btn" onclick="closeLinkModal()" style="width: 100%;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== QUANTUM SECURITY: THE BLACK SHIELD =====
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            // Disable F12, Ctrl+U, Ctrl+S, Ctrl+Shift+I, Ctrl+Shift+C
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.key === 'u') ||
+                (e.ctrlKey && e.key === 's') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+                e.preventDefault();
+                showToast('Security restriction enabled', 'error');
+            }
+        });
+
+        // ===== GLOBAL STATE =====
+        let currentUserId = null;
+        let isAdmin = false;
+        let adminPassword = 'admin1234';
+        let settings = {};
+        let transactions = [];
+        let copyLimit = false;
+        
+        // ===== INITIALIZE SYSTEM =====
+        function initSystem() {
+            // Load saved data
+            settings = JSON.parse(localStorage.getItem('gt_settings')) || {
+                appName: 'Global Titan',
+                productName: 'Quantum Gateway Premium',
+                userName: 'Valued Customer',
+                rechargeAmount: 999,
+                upiId: 'globaltitan@upi',
+                theme: 'normal'
+            };
+            
+            transactions = JSON.parse(localStorage.getItem('gt_transactions')) || [];
+            
+            // Check URL for routing
+            const urlParams = new URLSearchParams(window.location.search);
+            const path = window.location.pathname;
+            
+            if (urlParams.has('admin')) {
+                showAdminLogin();
+            } else if (urlParams.has('id')) {
+                currentUserId = urlParams.get('id');
+                loadUserPortal();
+            } else {
+                showRootPage();
+            }
+            
+            // Apply saved theme
+            applyTheme(settings.theme || 'normal');
+            
+            // Initialize admin auto-refresh if needed
+            if (urlParams.has('admin') && localStorage.getItem('gt_adminLoggedIn') === 'true') {
+                setTimeout(() => {
+                    showAdminPanel();
+                    startAdminAutoRefresh();
+                }, 100);
+            }
+            
+            // Check if user is locked
+            if (currentUserId) {
+                const userStatus = localStorage.getItem(`gt_user_${currentUserId}`);
+                if (userStatus === 'locked') {
+                    document.getElementById('lockScreen').style.display = 'flex';
+                    document.getElementById('paymentSection').style.display = 'none';
+                }
+            }
+        }
+        
+        // ===== ROUTING FUNCTIONS =====
+        function showRootPage() {
+            document.getElementById('rootPage').classList.remove('hidden');
+        }
+        
+        function showAdminLogin() {
+            document.getElementById('adminOverlay').classList.remove('hidden');
+            document.getElementById('adminPassword').focus();
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('adminOverlay').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadAdminData();
+            startAdminAutoRefresh();
+        }
+        
+        function loadUserPortal() {
+            if (!currentUserId) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('userPortal').classList.remove('hidden');
+            
+            // Display settings
+            document.getElementById('displayAppName').textContent = settings.appName;
+            document.getElementById('displayProductName').textContent = settings.productName;
+            document.getElementById('displayUserName').textContent = settings.userName;
+            document.getElementById('displayAmount').textContent = `₹${settings.rechargeAmount}`;
+            document.getElementById('displayUpiId').textContent = settings.upiId;
+            
+            // Check if already submitted/locked
+            const userStatus = localStorage.getItem(`gt_user_${currentUserId}`);
+            if (userStatus === 'locked') {
+                document.getElementById('lockScreen').style.display = 'flex';
+                document.getElementById('paymentSection').style.display = 'none';
+            }
+        }
+        
+        // ===== ADMIN AUTHENTICATION =====
+        document.getElementById('loginBtn').addEventListener('click', adminLogin);
+        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') adminLogin();
+        });
+        
+        function adminLogin() {
+            const input = document.getElementById('adminPassword').value;
+            const storedPassword = localStorage.getItem('gt_adminPassword') || adminPassword;
+            
+            if (input === storedPassword) {
+                localStorage.setItem('gt_adminLoggedIn', 'true');
+                showAdminPanel();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function logoutAdmin() {
+            localStorage.setItem('gt_adminLoggedIn', 'false');
+            window.location.href = 'index.html?admin';
+        }
+        
+        // ===== ADMIN AUTO-REFRESH =====
+        let adminRefreshInterval;
+        
+        function startAdminAutoRefresh() {
+            if (adminRefreshInterval) clearInterval(adminRefreshInterval);
+            adminRefreshInterval = setInterval(() => {
+                loadAdminData();
+            }, 2000); // 2-second refresh
+        }
+        
+        function loadAdminData() {
+            // Reload transactions
+            transactions = JSON.parse(localStorage.getItem('gt_transactions')) || [];
+            
+            // Update stats
+            const totalRevenue = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+            const verifiedCount = transactions.filter(t => t.status === 'Verified').length;
+            const pendingCount = transactions.filter(t => t.status === 'Pending').length;
+            
+            document.getElementById('totalRevenue').textContent = `₹${totalRevenue}`;
+            document.getElementById('verifiedCount').textContent = verifiedCount;
+            document.getElementById('pendingCount').textContent = pendingCount;
+            
+            // Update table
+            updateTransactionTable();
+            
+            // Update graph
+            updateRevenueGraph();
+        }
+        
+        function updateTransactionTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            transactions.forEach((t, index) => {
+                const row = document.createElement('tr');
+                
+                // Status badge
+                let statusClass = 'status-pending';
+                if (t.status === 'Verified') statusClass = 'status-verified';
+                if (t.status === 'Locked') statusClass = 'status-locked';
+                
+                // Action buttons logic
+                let actionButtons = '';
+                if (t.status === 'Verified') {
+                    actionButtons = '<span style="color: #34a853;">Verified ✓</span>';
+                } else {
+                    actionButtons = `
+                        <button class="action-btn approve-btn" onclick="approveTransaction('${t.id}')">Approve</button>
+                        <button class="action-btn unlock-btn" onclick="unlockUser('${t.userId}')">Unlock</button>
+                        <button class="action-btn delete-btn" onclick="deleteTransaction(${index})">Delete</button>
+                    `;
+                }
+                
+                row.innerHTML = `
+                    <td>${t.userId || t.id}</td>
+                    <td>${t.utr || 'N/A'}</td>
+                    <td>₹${t.amount || 0}</td>
+                    <td><span class="status-badge ${statusClass}">${t.status}</span></td>
+                    <td>${new Date(t.timestamp).toLocaleTimeString()}</td>
+                    <td>${actionButtons}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // ===== TRIPLE-ACTION BUTTON LOGIC =====
+        function approveTransaction(id) {
+            const transaction = transactions.find(t => t.id === id || t.userId === id);
+            if (transaction) {
+                transaction.status = 'Verified';
+                localStorage.setItem('gt_transactions', JSON.stringify(transactions));
+                showToast('Transaction approved successfully');
+                loadAdminData();
+            }
+        }
+        
+        function unlockUser(userId) {
+            // Remove lock for specific user only
+            localStorage.removeItem(`gt_user_${userId}`);
+            
+            // Update transaction status if exists
+            const transactionIndex = transactions.findIndex(t => t.userId === userId);
+            if (transactionIndex !== -1) {
+                transactions[transactionIndex].status = 'Pending';
+                localStorage.setItem('gt_transactions', JSON.stringify(transactions));
+            }
+            
+            showToast(`User ${userId} unlocked`);
+            loadAdminData();
+        }
+        
+        function deleteTransaction(index) {
+            if (confirm('Delete this transaction permanently?')) {
+                transactions.splice(index, 1);
+                localStorage.setItem('gt_transactions', JSON.stringify(transactions));
+                showToast('Transaction deleted');
+                loadAdminData();
+            }
+        }
+        
+        // ===== REVENUE GRAPH =====
+        function updateRevenueGraph() {
+            const svg = document.getElementById('revenueGraph');
+            svg.innerHTML = '';
+            
+            // Generate sample data (in real app, would come from actual transactions)
+            const data = [];
+            let total = 0;
+            
+            transactions.forEach((t, i) => {
+                total += t.amount || 0;
+                data.push({
+                    day: i + 1,
+                    revenue: total
+                });
+            });
+            
+            if (data.length === 0) {
+                data.push({day: 1, revenue: 0}, {day: 7, revenue: 0});
+            }
+            
+            const width = svg.clientWidth;
+            const height = 300;
+            const padding = 40;
+            
+            const xScale = (width - 2 * padding) / Math.max(7, data.length);
+            const yScale = (height - 2 * padding) / Math.max(10000, total);
+            
+            // Create path for area
+            let pathData = `M ${padding} ${height - padding}`;
+            
+            data.forEach((d, i) => {
+                const x = padding + i * xScale;
+                const y = height - padding - (d.revenue * yScale);
+                pathData += ` L ${x} ${y}`;
+            });
+            
+            pathData += ` L ${padding + (data.length - 1) * xScale} ${height - padding} Z`;
+            
+            // Create area
+            const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            area.setAttribute('d', pathData);
+            area.setAttribute('fill', 'url(#gradient)');
+            area.setAttribute('stroke', 'var(--secondary)');
+            area.setAttribute('stroke-width', '2');
+            
+            // Create gradient
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            gradient.setAttribute('id', 'gradient');
+            gradient.setAttribute('x1', '0%');
+            gradient.setAttribute('y1', '0%');
+            gradient.setAttribute('x2', '0%');
+            gradient.setAttribute('y2', '100%');
+            
+            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('stop-color', 'var(--secondary)');
+            stop1.setAttribute('stop-opacity', '0.6');
+            
+            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop2.setAttribute('offset', '100%');
+            stop2.setAttribute('stop-color', 'var(--secondary)');
+            stop2.setAttribute('stop-opacity', '0.1');
+            
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
+            svg.appendChild(area);
+            
+            // Add data points
+            data.forEach((d, i) => {
+                const x = padding + i * xScale;
+                const y = height - padding - (d.revenue * yScale);
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', '4');
+                circle.setAttribute('fill', 'var(--secondary)');
+                svg.appendChild(circle);
+            });
+        }
+        
+        // ===== SETTINGS MANAGEMENT =====
+        function loadSettings() {
+            document.getElementById('appName').value = settings.appName;
+            document.getElementById('productName').value = settings.productName;
+            document.getElementById('userName').value = settings.userName;
+            document.getElementById('rechargeAmount').value = settings.rechargeAmount;
+            document.getElementById('upiId').value = settings.upiId;
+            document.getElementById('themeSelect').value = settings.theme || 'normal';
+        }
+        
+        function saveSettings() {
+            settings.appName = document.getElementById('appName').value;
+            settings.productName = document.getElementById('productName').value;
+            settings.userName = document.getElementById('userName').value;
+            settings.rechargeAmount = parseInt(document.getElementById('rechargeAmount').value) || 0;
+            settings.upiId = document.getElementById('upiId').value;
+            settings.theme = document.getElementById('themeSelect').value;
+            
+            localStorage.setItem('gt_settings', JSON.stringify(settings));
+            showToast('Settings saved successfully');
+            
+            // Update user portal if open
+            if (document.getElementById('userPortal').classList.contains('hidden') === false) {
+                document.getElementById('displayAppName').textContent = settings.appName;
+                document.getElementById('displayProductName').textContent = settings.productName;
+                document.getElementById('displayUserName').textContent = settings.userName;
+                document.getElementById('displayAmount').textContent = `₹${settings.rechargeAmount}`;
+                document.getElementById('displayUpiId').textContent = settings.upiId;
+            }
+        }
+        
+        // ===== THEME ENGINE =====
+        function applyTheme(theme) {
+            const body = document.body;
+            body.classList.remove('theme-platinum', 'theme-gold', 'theme-silver', 'theme-normal');
+            
+            switch(theme) {
+                case 'platinum': body.classList.add('theme-platinum'); break;
+                case 'gold': body.classList.add('theme-gold'); break;
+                case 'silver': body.classList.add('theme-silver'); break;
+                default: body.classList.add('theme-normal');
+            }
+            
+            // Save theme
+            settings.theme = theme;
+            localStorage.setItem('gt_settings', JSON.stringify(settings));
+        }
+        
+        // ===== UPI COPY ENGINE =====
+        function copyUpiId() {
+            if (copyLimit) {
+                showToast('UPI ID can only be copied once', 'warning');
+                return;
+            }
+            
+            const upiId = document.getElementById('displayUpiId').textContent;
+            navigator.clipboard.writeText(upiId).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = ' ✓ COPIED';
+                btn.classList.add('copied');
+                btn.disabled = true;
+                copyLimit = true;
+                showToast('UPI ID copied successfully!');
+            });
+        }
+        
+        // ===== UTR SUBMISSION =====
+        function submitUTR() {
+            const utrInput = document.getElementById('utrInput').value.trim();
+            const errorElement = document.getElementById('utrError');
+            
+            // UTR Validation: Exactly 12 numeric digits
+            if (!/^\d{12}$/.test(utrInput)) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = 'UTR must be exactly 12 numeric digits';
+                setTimeout(() => {
+                    errorElement.style.display = 'none';
+                }, 3000);
+                return;
+            }
+            
+            // Create transaction record
+            const transaction = {
+                id: Date.now().toString(),
+                userId: currentUserId,
+                utr: utrInput,
+                amount: settings.rechargeAmount,
+                status: 'Pending',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Add to transactions
+            transactions.push(transaction);
+            localStorage.setItem('gt_transactions', JSON.stringify(transactions));
+            
+            // Lock this user ID
+            localStorage.setItem(`gt_user_${currentUserId}`, 'locked');
+            
+            // Show lock screen
+            document.getElementById('lockScreen').style.display = 'flex';
+            document.getElementById('paymentSection').style.display = 'none';
+            
+            // Clear input
+            document.getElementById('utrInput').value = '';
+            
+            showToast('UTR submitted successfully!');
+        }
+        
+        // ===== PAYMENT APPS =====
+        function openPayment(app) {
+            const upiId = encodeURIComponent(settings.upiId);
+            const amount = settings.rechargeAmount;
+            let url = '';
+            
+            switch(app) {
+                case 'paytm':
+                    url = `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(settings.appName)}&am=${amount}`;
+                    break;
+                case 'phonepe':
+                    url = `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(settings.appName)}&am=${amount}`;
+                    break;
+                case 'gpay':
+                    url = `tez://upi/pay?pa=${upiId}&pn=${encodeURIComponent(settings.appName)}&am=${amount}`;
+                    break;
+                case 'upi':
+                    url = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(settings.appName)}&am=${amount}`;
+                    break;
+            }
+            
+            window.open(url, '_blank');
+            showToast(`Opening ${app}...`);
+        }
+        
+        // ===== MODAL CONTROLS =====
+        function openHowItWorks() {
+            document.getElementById('howItWorksModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('howItWorksModal').style.display = 'none';
+        }
+        
+        function openLinkModal() {
+            document.getElementById('linkGenModal').style.display = 'flex';
+        }
+        
+        function closeLinkModal() {
+            document.getElementById('linkGenModal').style.display = 'none';
+        }
+        
+        // ===== CHAT BOTS =====
+        function toggleSupportChat() {
+            const chat = document.getElementById('supportChat');
+            chat.style.display = chat.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        function sendSupportMessage() {
+            const input = document.getElementById('supportInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('supportMessages');
+            
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message';
+            userMsg.style.background = 'var(--primary)';
+            userMsg.style.marginLeft = 'auto';
+            userMsg.innerHTML = `<strong>You:</strong> ${message}`;
+            messagesDiv.appendChild(userMsg);
+            
+            // Bot response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot-message';
+                
+                let response = "Thank you for your question. For payment issues, please ensure you've copied the correct UPI ID and entered the exact amount.";
+                
+                if (message.toLowerCase().includes('utr')) {
+                    response = "The UTR (Unique Transaction Reference) is a 12-digit number found in your payment receipt. It's generated by your bank after successful payment.";
+                } else if (message.toLowerCase().includes('pay') || message.toLowerCase().includes('how')) {
+                    response = "To pay: 1) Copy the UPI ID, 2) Open your payment app, 3) Paste the UPI ID, 4) Enter amount ₹" + settings.rechargeAmount + ", 5) Complete payment.";
+                }
+                
+                botMsg.innerHTML = `<strong>Support:</strong> ${response}`;
+                messagesDiv.appendChild(botMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 500);
+            
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function quickSupport(question) {
+            document.getElementById('supportInput').value = question;
+            sendSupportMessage();
+        }
+        
+        function sendAdminMessage() {
+            const input = document.getElementById('adminChatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('adminChatMessages');
+            
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message';
+            userMsg.style.background = 'var(--primary)';
+            userMsg.style.marginLeft = 'auto';
+            userMsg.innerHTML = `<strong>Admin:</strong> ${message}`;
+            messagesDiv.appendChild(userMsg);
+            
+            // Bot response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot-message';
+                
+                let response = "I can help you with settings, transaction management, and user link generation. What specific assistance do you need?";
+                
+                if (message.toLowerCase().includes('setting')) {
+                    response = "Go to Settings tab to modify: App Name, Product Name, User Name, Recharge Amount, UPI ID, and Theme. Click 'Save All Settings' after changes.";
+                } else if (message.toLowerCase().includes('transaction')) {
+                    response = "Transactions auto-refresh every 2 seconds. Use Approve to verify, Unlock to allow resubmission, Delete to remove. Once approved, Unlock/Delete are disabled.";
+                } else if (message.toLowerCase().includes('link') || message.toLowerCase().includes('generate')) {
+                    response = "User links are generated with unique 6-digit IDs. Each link creates a locked user portal. Use the 'Generate Link' button in the main menu.";
+                } else if (message.toLowerCase().includes('password')) {
+                    response = "Change password in Settings bottom section. Enter current password, then new password twice. Old password won't work after change.";
+                }
+                
+                botMsg.innerHTML = `<strong>Help Bot:</strong> ${response}`;
+                messagesDiv.appendChild(botMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 500);
+            
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function quickQuestion(question) {
+            document.getElementById('adminChatInput').value = question;
+            sendAdminMessage();
+        }
+        
+        // ===== ADMIN SECTION NAVIGATION =====
+        function showSection(section) {
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('helpSection').classList.add('hidden');
+            
+            if (section === 'dashboard') {
+                document.getElementById('dashboardSection').classList.remove('hidden');
+            } else if (section === 'settings') {
+                document.getElementById('settingsSection').classList.remove('hidden');
+                loadSettings();
+            } else if (section === 'help') {
+                document.getElementById('helpSection').classList.remove('hidden');
+            }
+        }
+        
+        // ===== LINK GENERATION =====
+        function generateUserLink() {
+            // Generate unique 6-digit ID
+            const uniqueId = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // Create user record
+            const userRecord = {
+                id: uniqueId,
+                created: new Date().toISOString(),
+                status: 'active'
+            };
+            
+            // Save to users list
+            let users = JSON.parse(localStorage.getItem('gt_users')) || [];
+            users.push(userRecord);
+            localStorage.setItem('gt_users', JSON.stringify(users));
+            
+            // Generate full URL
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullUrl = `${baseUrl}?id=${uniqueId}`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                document.getElementById('generatedLink').textContent = fullUrl;
+                showToast('User link generated and copied!');
+            });
+        }
+        
+        // ===== PASSWORD CHANGE =====
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            const storedPassword = localStorage.getItem('gt_adminPassword') || adminPassword;
+            
+            if (current !== storedPassword) {
+                showMessage('Current password is incorrect', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showMessage('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (newPass.length < 4) {
+                showMessage('New password must be at least 4 characters', 'error');
+                return;
+            }
+            
+            localStorage.setItem('gt_adminPassword', newPass);
+            showMessage('Password updated successfully!', 'success');
+            
+            // Clear fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+        
+        function showMessage(text, type) {
+            const element = document.getElementById('passwordMessage');
+            element.textContent = text;
+            element.style.color = type === 'error' ? '#ea4335' : '#34a853';
+            
+            setTimeout(() => {
+                element.textContent = '';
+            }, 5000);
+        }
+        
+        // ===== UTILITY FUNCTIONS =====
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? '#ea4335' : 
+                                   type === 'warning' ? '#fbbc04' : '#34a853';
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ===== AUTO-ADAPTIVE UI =====
+        function detectColorScheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #121212 100%)';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)';
+            }
+        }
+        
+        // ===== INITIALIZE ON LOAD =====
+        window.addEventListener('DOMContentLoaded', () => {
+            initSystem();
+            detectColorScheme();
+            
+            // Add Generate Link button to admin header
+            const adminNav = document.querySelector('.admin-nav');
+            if (adminNav) {
+                const linkBtn = document.createElement('button');
+                linkBtn.className = 'nav-btn';
+                linkBtn.innerHTML = '<i class="fas fa-link"></i> Generate Link';
+                linkBtn.onclick = openLinkModal;
+                adminNav.insertBefore(linkBtn, adminNav.children[1]);
+            }
+        });
+        
+        // Auto-refresh for admin if already logged in
+        if (localStorage.getItem('gt_adminLoggedIn') === 'true' && window.location.search.includes('admin')) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    showAdminPanel();
+                }, 500);
+            });
+        }
+    </script>
+</body>
+</html>
